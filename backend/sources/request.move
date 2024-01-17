@@ -4,7 +4,7 @@ module backend::request {
     use std::string::{String};
     use sui::object::{Self, UID};
     use sui::transfer;
-    use sui::tx_context::TxContext;
+    use sui::tx_context::{Self, TxContext};
     use sui::table::{Self, Table};
     use sui::balance::{Self, Balance};
     use sui::coin::{Self, Coin};
@@ -34,7 +34,7 @@ module backend::request {
     }
 
     public fun display_requests(
-        ctx: &mut TxContext
+        ctx: &mut TxContext,
     ) {
         let reqs = table::new<u64, Request>(ctx);
 
@@ -50,6 +50,8 @@ module backend::request {
     public fun add_request(
         self: &mut PendingRequests,
         req: Request,
+        ctx: &mut TxContext,
+
     ) {
         table::add(&mut self.request_created, self.num_reqs, req);
         self.num_reqs = self.num_reqs + 1;
@@ -58,14 +60,16 @@ module backend::request {
     public fun fulfill_request(
         self: &mut PendingRequests,
         payment_wallet: &mut Coin<SUI>,
-        fulfiller_wallet: Balance<SUI>,
-        fulfilled: u64,
+        // fulfiller_wallet: address,
+        order_to_fulfil: u64,
+        ctx: &mut TxContext,
+
         
     ) {
-        assert!(fulfilled < self.num_reqs, EBadFulfill);
+        assert!(order_to_fulfil < self.num_reqs, EBadFulfill);
 
         self.num_reqs = self.num_reqs - 1;
-        let removed_request = table::remove(&mut self.request_created, fulfilled);
+        let removed_request = table::remove(&mut self.request_created, order_to_fulfil);
         let Request { id,
         name: _,
         building: _, 
@@ -78,18 +82,23 @@ module backend::request {
 
         assert!(coin::value(payment_wallet) >= to_pay, EInsufficientBalance);
 
-
         let coin_balance = coin::balance_mut(payment_wallet);
+        // let profit = coin::take(&mut payment_wallet, to_pay, ctx);
         let paid = balance::split(coin_balance, to_pay);
-        
-        balance::join(&mut fulfiller_wallet, paid);
+
+        let temp_balance = balance::zero<SUI>();
+        balance::join(&mut temp_balance, paid);
+
+        let all = balance::value(&temp_balance);
+        let profit = coin::take(&mut temp_balance, all, ctx);
+
+        transfer::public_transfer(profit, fulfiller_wallet);
+
+        balance::destroy_zero(temp_balance);
+        // balance::join(&mut fulfiller_wallet, paid);
+
 
         object::delete(id);
-
-
-
-
-
 
     }
 
