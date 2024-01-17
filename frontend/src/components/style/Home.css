@@ -1,0 +1,59 @@
+/* YourComponent.css */
+
+.vertical-bar {
+  display: flex;
+  position: relative;
+  width: 90vw;
+  left: 5vw;
+  /* background-color: #f0f0f0; Background color for the vertical bar */
+  padding: 10px; /* Adjust the padding as needed */
+  border: 1px solid #ccc; /* Add a border for separation */
+  border-radius: 5px; /* Optional: Add border-radius for rounded corners */
+}
+
+.field {
+  color: rgb(91, 52, 129);
+  font-size: 1.3vw;
+  margin-bottom: 0.5vw; /* Adjust the margin between fields */
+  margin-top: 0.5vw; /* Adjust the margin between fields */
+
+  padding: 8px; /* Adjust the padding for each field */
+  border: 1px solid #ddd; /* Add a border for each field */
+  border-radius: 3px; /* Optional: Add border-radius for rounded corners */
+  /* background-color: #fff; Background color for each field */
+  border: 1px solid rgb(91, 52, 129);
+
+}
+
+.wrapper {
+
+  align-items: center;
+  padding-left: 2vw;
+}
+
+#fulfill {
+  color: white;
+  
+}
+
+button:hover {
+  color:rgb(91, 52, 129);
+  background-color: white;
+}
+
+#fulfill:hover{
+  color:rgb(91, 52, 129);
+
+  
+}
+/* Additional styling as needed */
+
+#toggle {
+  position: absolute;
+  right: 1.25%;
+}
+
+#main{
+  position: relative;
+  top:1vw;
+}

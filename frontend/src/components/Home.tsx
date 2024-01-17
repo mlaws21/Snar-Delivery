@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import RequestForm from "./RequestForm";
+import "./style/Home.css"
 
 interface Request {
     name: string;
@@ -18,16 +19,22 @@ interface RequestComponentProps {
 
 const RequestComponent: React.FC<RequestComponentProps> = ({ request }) => {
     
+  const fulfillRequest = () => {
+    console.log("req fufilled")
+  }
 
     return (
-        <div>
-        <p>Name: {request.name}</p>
-        <p>Building: {request.building}</p>
-        <p>Room: {request.room}</p>
-        <p>Swipe: {request.swipe ? 'Yes' : 'No'}</p>
-        <p>Food: {request.food}</p>
-        <p>Price: {request.price}</p>
-        <p>Fulfilled: {request.fulfilled ? 'Yes' : 'No'}</p>
+        <div className="vertical-bar">
+        <div className="wrapper"><p className="field">Name: {request.name}</p></div>
+        <div className="wrapper"><p className="field">Building: {request.building}</p></div>
+        <div className="wrapper"><p className="field">Room: {request.room}</p></div>
+        <div className="wrapper"><p className="field">Swipe: {request.swipe ? 'Yes' : 'No'}</p></div>
+        <div className="wrapper"><p className="field">Food: {request.food}</p></div>
+        <div className="wrapper"><p className="field">Price: {request.price}</p></div>
+        <div className="wrapper"><button id="fulfill" className="field" onClick={fulfillRequest}>Fulfill Request</button></div>
+
+
+        
         </div>
     )
 }
@@ -38,6 +45,16 @@ interface MyComponentProps {
 
 const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const sampleRequest: Request = {
+    name: 'John Doedjkahhfdjahfkdjahfkjahdfkjahdfkjahsdkfjhskjdhakjfhdkj',
+    building: 'Main Building',
+    room: '101',
+    swipe: true,
+    food: 'Pizza',
+    price: 10,
+    fulfilled: false,
+  };
 
   const toggleOpenClose = () => {
     setIsOpen(!isOpen);
@@ -50,20 +67,20 @@ const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ })
   };
 
   return (
-    <div>
-      <button onClick={toggleOpenClose}>
+    <div id="main">
+      <button id="toggle" onClick={toggleOpenClose}>
         {/* {isOpen ? 'Close' : 'Open'} Form */}
         {isOpen ? "x" : '+'}
 
       </button>
       
-      {isOpen && (
+      {isOpen ? (
         <div>
           {/* Content to display when the component is open */}
           <RequestForm onSubmit={handleRequestSubmit} />
 
         </div>
-      )}
+      ) : <RequestComponent request={sampleRequest}/>}
     </div>
   );
 };
@@ -71,15 +88,7 @@ const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ })
 
 
 const Home = () => {
-    const sampleRequest: Request = {
-        name: 'John Doe',
-        building: 'Main Building',
-        room: '101',
-        swipe: true,
-        food: 'Pizza',
-        price: 10,
-        fulfilled: false,
-      };
+
 
 
     return (

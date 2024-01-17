@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./style/RequestForm.css"
 
 interface Request {
   name: string;
@@ -56,7 +57,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ onSubmit }) => {
         <input type="text" name="room" value={formData.room} onChange={handleChange} required />
       </label>
 
-      <label>
+      <label className="checkContainer">
         Swipe:
         <input type="checkbox" name="swipe" checked={formData.swipe} onChange={handleChange} />
       </label>
@@ -71,10 +72,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ onSubmit }) => {
         <input type="number" name="price" value={formData.price} onChange={handleChange} required />
       </label>
 
-      <label>
-        Fulfilled:
-        <input type="checkbox" name="fulfilled" checked={formData.fulfilled} onChange={handleChange} />
-      </label>
+
 
       <button type="submit">Submit Request</button>
     </form>
