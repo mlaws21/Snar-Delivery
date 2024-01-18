@@ -1,1 +1,4 @@
 backend/build/*
+*/node_modules
+sui.log.*
+frontend/*
