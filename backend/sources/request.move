@@ -20,13 +20,12 @@ module backend::request {
         name: String,
         building: String, 
         room: String,
-        swipe: bool,
+        swipe: String,
         food: String,
         // price: Balance<SUI>,
         // payment: Coin<SUI>,
         payment: Balance<SUI>,
-        // price: u64,
-        fulfilled: bool,
+        price: String,
     }
 
     struct RequestBoard has key {
@@ -49,6 +48,52 @@ module backend::request {
         );
     }
 
+    // public fun get_request_data(
+    //     the_request: &Request,
+    // ) : vector<String> {
+    //     let requestRep = vector::empty<String>();
+    //     vector::push_back(&mut requestRep, the_request.name);
+    //     vector::push_back(&mut requestRep, the_request.building);
+    //     vector::push_back(&mut requestRep, the_request.room);
+    //     vector::push_back(&mut requestRep, the_request.swipe);
+    //     vector::push_back(&mut requestRep, the_request.food);
+    //     vector::push_back(&mut requestRep,)
+
+    //     requestRep
+    // }
+
+    // public fun get_table(
+    //     board: &RequestBoard,
+    // ) : &Table<u64, Request> {
+    //     &board.request_created
+    // }
+
+    // public fun get_board(
+    //     board: &RequestBoard,
+    // ) //: vector<vector<String>>
+    // {
+    //     let loops = board.num_reqs;//table::length(&mut board.request_created);
+    //     let i = 0;
+    //     let boardRep = vector::empty<vector<String>>();
+    //     while (i < loops) {
+    //         if (table::contains(&board.request_created, i)) {
+
+    //             let requestRep = vector::empty<String>();
+    //             let thisRequest = table::borrow(&board.request_created, i);
+    //             vector::push_back(&mut requestRep, i);
+    //             vector::push_back(&mut requestRep, thisRequest.name);
+    //             vector::push_back(&mut requestRep, thisRequest.building);
+    //             vector::push_back(&mut requestRep, thisRequest.room);
+    //             vector::push_back(&mut requestRep, thisRequest.swipe);
+    //             vector::push_back(&mut requestRep, thisRequest.food);
+
+    //             vector::push_back(&mut boardRep, requestRep);
+    //         }
+    //     }
+        
+    //     boardRep
+    // }
+
     public fun add_request(
         self: &mut RequestBoard,
         // payment: &mut Coin<SUI>,
@@ -56,14 +101,16 @@ module backend::request {
         my_name: String,
         my_building: String, 
         my_room: String,
-        my_swipe: bool,
+        my_swipe: String,
         my_food: String,
         // price: Balance<SUI>,
         // payment: Coin<SUI>,
-        my_payment: Balance<SUI>,
+        my_coin: Coin<SUI>,
+        my_price: String,
+
         // price: u64,
-        my_fulfilled: bool,
         ctx: &mut TxContext,
+        
 
     ) {
         let req = Request { 
@@ -73,11 +120,10 @@ module backend::request {
             room: my_room,
             swipe: my_swipe,
             food: my_food,
-            payment: my_payment,
-            // price: to_pay,
-            fulfilled: my_fulfilled,
+            payment: coin::into_balance(my_coin),
+            price: my_price,
         };
-
+        
         // let paid = balance::split(req., shop.price);
         table::add(&mut self.request_created, self.num_reqs, req);
         self.num_reqs = self.num_reqs + 1;
@@ -102,8 +148,8 @@ module backend::request {
         swipe: _,
         food: _,
         payment: paid,
-        // price: to_pay,
-        fulfilled: _} = removed_request;
+        price: _, 
+        } = removed_request;
 
         // assert!(coin::value(&mut payment_wallet) >= to_pay, EInsufficientBalance);
 

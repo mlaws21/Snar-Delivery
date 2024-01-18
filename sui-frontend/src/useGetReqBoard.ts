@@ -3,7 +3,7 @@ import { useSuiClientQuery } from '@mysten/dapp-kit';
 export const useGetReqBoard = () => {
   const handleGetReqBoard = () => {
     const id: string =
-      "0x397958187cf47b9632944fc6e81ca999a2c51a0d5a3fd3e2904d580d45920c17";
+      "0x8c619ab6e30bcd0322a63eef174587e04590a4dc62a5d605f7f2bec8228ce659";
 
     const { data, isLoading, error, refetch } = useSuiClientQuery("getObject", {
       id,
