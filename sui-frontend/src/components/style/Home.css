@@ -1,12 +1,19 @@
-/* YourComponent.css */
+@import url('https://fonts.googleapis.com/css2?family=Gruppo&family=Marcellus+SC&family=Noto+Sans+Adlam:wght@400..700&family=Titillium+Web:wght@200&display=swap');
+
+div {
+  font-family: "Gruppo", sans-serif;
+  font-weight: bold;
+}
 
 .board {
+  height: 80vh;
+  overflow-y: scroll;
   border-radius: 1vw;
   border: 1px solid rgb(91, 52, 129);
   width: 90%;
   left: 5%;
   position: relative;
-  top: 1vw;
+  top: 1.5vh;
 }
 
 .vertical-bar {
@@ -19,6 +26,8 @@
   border: 1px solid #ccc; /* Add a border for separation */
   border-radius: 5px; /* Optional: Add border-radius for rounded corners */
   margin-top: 1vw;
+  margin-bottom: 1vw;
+
 }
 
 .field {
@@ -33,6 +42,11 @@
   /* background-color: #fff; Background color for each field */
   border: 1px solid rgb(91, 52, 129);
 
+}
+
+.noRequests {
+  font-size: 3vw;
+  text-align: center;
 }
 
 .wrapper {
@@ -60,7 +74,17 @@ button:hover {
 }
 /* Additional styling as needed */
 
+
 #toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 2vw;
+  width: 2vw;
+  line-height: 1;
+
+  font-size: 1.8vw;
   position: absolute;
   right: 1.25%;
 }
@@ -71,70 +95,6 @@ button:hover {
 }
 
 
-/*radio button*/
-
-/* Customize the label (the container) */
-.container {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Hide the browser's default radio button */
-.container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-/* Create a custom radio button */
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 25px;
-  width: 25px;
-  background-color: #eee;
-  border-radius: 50%;
-}
-
-/* On mouse-over, add a grey background color */
-.container:hover input ~ .checkmark {
-  background-color: #ccc;
-}
-
-/* When the radio button is checked, add a blue background */
-.container input:checked ~ .checkmark {
-  background-color: #2196F3;
-}
-
-/* Create the indicator (the dot/circle - hidden when not checked) */
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-/* Show the indicator (dot/circle) when checked */
-.container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-/* Style the indicator (dot/circle) */
-.container .checkmark:after {
-  top: 9px;
-  left: 9px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: white;
+.radioDiv {
+  display: flex;
 }

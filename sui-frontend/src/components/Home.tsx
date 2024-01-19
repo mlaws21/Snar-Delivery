@@ -85,6 +85,7 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
           });
         },
         onError: (err) => {
+          console.log("something went wrong");
           console.log(err);
         },
       },
@@ -93,23 +94,32 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
 
 
   return (
-    <div className='board'>
-      {myData.map((rowData: DataTableItem) => (
-      <div key={rowData.id} className="vertical-bar">
+    <div>
+      {myData.length > 0 ? (
+      <div className='board'>
+        {myData.map((rowData: DataTableItem) => (
+        <div key={rowData.id} className="vertical-bar">
 
 
-          <div className="wrapper"><p className="field">Name: {rowData.name}</p></div>
-          <div className="wrapper"><p className="field">Building: {rowData.building}</p></div>
-          <div className="wrapper"><p className="field">Room: {rowData.room}</p></div>
-          <div className="wrapper"><p className="field">Swipe: {rowData.swipe ? 'Yes' : 'No'}</p></div>
-          <div className="wrapper"><p className="field">Food: {rowData.food}</p></div>
-          <div className="wrapper"><p className="field">Price: {rowData.price}</p></div>
-          <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(rowData.id)}>Fulfill Request</button></div>
+            <div className="wrapper"><p className="field">Name: {rowData.name}</p></div>
+            <div className="wrapper"><p className="field">Building: {rowData.building}</p></div>
+            <div className="wrapper"><p className="field">Room: {rowData.room}</p></div>
+            <div className="wrapper"><p className="field">Paid: {rowData.swipe ? 'Yes' : 'No'}</p></div>
+            <div className="wrapper"><p className="field">Food: {rowData.food}</p></div>
+            <div className="wrapper"><p className="field">Price: {rowData.price}</p></div>
+            <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(rowData.id)}>Fulfill Request</button></div>
 
-      </div>
-    
-    ))}
+        </div>
+      
+      ))}
 
+    </div>) : (<div>
+        <p className='noRequests'>No Pending Requests...</p>
+        <p className='noRequests'>Click the Plus to add a Request!</p>
+
+      
+      </div>)
+    }
     </div>
 
   );
@@ -240,6 +250,7 @@ const Form = () => {
           });
         },
         onError: (err) => {
+          console.log("something went wrong");
           console.log(err);
         },
       },

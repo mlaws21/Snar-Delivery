@@ -59,9 +59,9 @@ const RequestForm: React.FC<RequestFormProps> = ({ onSubmit }) => {
         <input type="text" name="room" value={formData.room} onChange={handleChange} required />
       </label>
 
-      <label className="checkContainer">
-        Swipe:
-        <input type="checkbox" name="swipe" checked={formData.swipe} onChange={handleChange} />
+      <label>
+        Paid:
+        <input type="checkbox" className="checkmark" name="swipe" checked={formData.swipe} onChange={handleChange} />
       </label>
 
       <label>

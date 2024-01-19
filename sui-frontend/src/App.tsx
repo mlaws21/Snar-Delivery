@@ -2,6 +2,7 @@ import { ConnectButton } from "@mysten/dapp-kit";
 import { Box, Flex, Heading } from "@radix-ui/themes";
 // import { WalletStatus } from "./WalletStatus";
 import Home from "./components/Home";
+import "./App.css"
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         }}
       >
         <Box>
-          <Heading>Snar Delivery</Heading>
+          <Heading className="header">Snar Delivery</Heading>
         </Box>
 
         <Box>
