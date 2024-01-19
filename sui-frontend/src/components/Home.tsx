@@ -4,21 +4,19 @@ import "./style/Home.css"
 import type { SuiMoveObject, } from '@mysten/sui.js/client';
 
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { SUI_SYSTEM_STATE_OBJECT_ID } from '@mysten/sui.js/utils';
 
 import {
   useCurrentAccount,
   useSignAndExecuteTransactionBlock,
   useSuiClient,
 } from "@mysten/dapp-kit";
-import { SuiObjectData, getFullnodeUrl, SuiClient, SuiParsedData } from "@mysten/sui.js/client";
+import { SuiObjectData, } from "@mysten/sui.js/client";
 import { useGetReqBoard } from '../useGetReqBoard';
 
-const PACKAGE = "0x210121e3ab3e913f8f12f20d937b0c43fc7e0556fd0405ad40462d2785705e87"
-const BOARD_OBJ = "0x6a82c4ea99f96c6dbcea4fb485142ae55c37d23981384fe14f0a7c2f8498a04f"
-const BOARD = "0xdc08a66b57cc065f6038e362bb6b25a52904c69cf04e05eb2bcb1f318abbab0d"
-
-
+const PACKAGE = "0xa09f575cb98831bbe860866c80b9f5e24adce17a18a1b17a6d0eee35c6f6d092"
+const BOARD_OBJ = "0xc0ea9614391529f12cb850c97e6c7c3a1204cf34e1787fdb889f3207819baf4a"
+const BOARD = "0x332ec813b8423ee120c4dcb009e1ec766db7becabcf4049671d2633220a59486"
+const CONVERSION = 1000000000
 
 interface Request {
     name: string;
@@ -35,19 +33,23 @@ interface RequestComponentProps {
 }
 
 
-interface DataTableProps {
-  data: {
-    dynamicFieldId: string;
+type DataTableItem = {
+  // data: {
+    id: number;
     name: string;
     building: string;
     room: string;
     swipe: string;
     food: string;
     price: string;
-  }[];
+  // }[];
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data }) => {
+type DataTableProps = {
+  data: DataTableItem[];
+};
+
+const DataTable: React.FC<DataTableProps>= ({ data }) => {
   const account = useCurrentAccount();
   const client = useSuiClient();
   const { mutate: signAndExecuteTransactionBlock } =
@@ -60,8 +62,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const fulfillRequest = (requestNum: number) => {
     // Do something with the submitted request
     let txb = new TransactionBlock();
-
-    // const [coin] = txb.splitCoins(txb.gas, [1]);
 
     const [payment] = txb.moveCall({
       target: `${PACKAGE}::request::fulfill_request`,
@@ -84,7 +84,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       },
       {
         onSuccess: (tx) => {
-          console.log(tx);
           client.waitForTransactionBlock({ digest: tx.digest }).then(() => {
             refetch();
           });
@@ -105,23 +104,10 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     <div className="wrapper"><p className="field">Room: {data.room}</p></div>
     <div className="wrapper"><p className="field">Swipe: {data.swipe ? 'Yes' : 'No'}</p></div>
     <div className="wrapper"><p className="field">Food: {data.food}</p></div>
-    <div className="wrapper"><p className="field">Price: {data.price}</p></div>
-    <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(1)}>Fulfill Request</button></div>
+    <div className="wrapper"><p className="field">Price: {(data.price)}</p></div>
+    <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(data.id)}>Fulfill Request</button></div>
     </div>
-    // <div>
-    //   {data.map((rowData, index) => (
-    //     <div key={index}>
-    //       {/* <p>Dynamic Field id = {rowData.dynamicFieldId}</p> */}
-    //       <p>name: {rowData.name}</p>
-    //       <p>building: {rowData.building}</p>
-    //       <p>Room: {rowData.room}</p>
-    //       <p>Swipe: {rowData.swipe}</p>
-    //       <p>Food: {rowData.food}</p>
-    //       <p>Price: {rowData.price}</p>
-    //       <hr />
-    //     </div>
-    //   ))}
-    // </div>
+
   );
 };
 
@@ -166,6 +152,7 @@ const RequestComponent: React.FC<RequestComponentProps> = ({ request }) => {
 
           return {
             // dynamicFieldId: dynFieldForPool.data.objectId,
+            id: poolFields["key"],
             name: poolFields["name"],
             building: poolFields["building"],
             room: poolFields["room"],
@@ -186,18 +173,6 @@ const RequestComponent: React.FC<RequestComponentProps> = ({ request }) => {
     }
   };
   
-  // const fetchData = async () => {
-  //   try {
-  //     const data = await useGetTable();
-  //     console.log(data)
-  //     return (
-  //       data
-  //     )
-  //     // Use the data as needed
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // };
   useEffect(() => {
     // Initial data fetch
     useGetTable();
@@ -212,54 +187,14 @@ const RequestComponent: React.FC<RequestComponentProps> = ({ request }) => {
   }, []);
 
   
-  console.log(tableData)
-  // fetchData()
-  // Call fetchData somewhere in your code
 
-  
-  // const TableData = useGetTable()
-  // useEffect(() => {
-  //   if (!isLoading && !error && data?.data) {
-  //     console.log(data)
-  //     const currTable = getTable(data.data);
-  //     console.log(currTable)
-  //     // const currentCanvas = getArrayFields(data.data);
-  //     // setGridColors(currentCanvas);
-  //     // if (length !== currentCanvas.length) {
-  //     //   setLength(currentCanvas.length);
-  //     //   if (currentCanvas) {
-  //     //     // Create a new grid with the same dimensions as currentCanvas
-  //     //     const newLocalGrid = Array.from(
-  //     //       { length: currentCanvas.length },
-  //     //       () => Array(currentCanvas[0].length).fill("0"),
-  //     //     );
-
-  //     //     setLocalGrid(newLocalGrid);
-  //     //   }
-  //     // }
-  //   }
-  // }, [data, isLoading, error]);
-
-  // const fulfillRequest = () => {
-    
-  //   console.log("req fufilled")
-  // }
 
     return (
         <div>
-        {/* <div className="vertical-bar">
-        <div className="wrapper"><p className="field">Name: {request.name}</p></div> 
-        <div className="wrapper"><p className="field">Building: {request.building}</p></div>
-        <div className="wrapper"><p className="field">Room: {request.room}</p></div>
-        <div className="wrapper"><p className="field">Swipe: {request.swipe ? 'Yes' : 'No'}</p></div>
-        <div className="wrapper"><p className="field">Food: {request.food}</p></div>
-        <div className="wrapper"><p className="field">Price: {request.price}</p></div>
-        <div className="wrapper"><button id="fulfill" className="field" onClick={fulfillRequest}>Fulfill Request</button></div>
-        </div> */}
-        {tableData.map((rowData, index) => (
 
+        {tableData.length > 0 ? tableData.map((rowData, index) => (
           <DataTable key={index} data={rowData} />
-        ))
+        )) : <p>No Current Requests</p>
         }
         </div>
     )
@@ -297,9 +232,9 @@ const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ })
     // Do something with the submitted request
     let txb = new TransactionBlock();
 
-    // txb.setGasBudget(10000000);
 
-    const [coin] = txb.splitCoins(txb.gas, [request.price]);
+
+    const [coin] = txb.splitCoins(txb.gas, [request.price * CONVERSION]);
 
     txb.moveCall({
       target: `${PACKAGE}::request::add_request`,
@@ -324,8 +259,6 @@ const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ })
       },
       {
         onSuccess: (tx) => {
-          console.log(tx);
-          // setDeltas(new Set());
           client.waitForTransactionBlock({ digest: tx.digest }).then(() => {
             refetch();
           });
@@ -335,7 +268,7 @@ const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ })
         },
       },
     );
-    console.log('Submitted Request:', request);
+    toggleOpenClose();
   };
 
   return (

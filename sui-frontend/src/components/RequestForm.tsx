@@ -69,7 +69,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ onSubmit }) => {
 
       <label>
         Price:
-        <input type="number" name="price" value={formData.price} onChange={handleChange} required />
+        <input step="0.01" type="number" name="price" value={formData.price} onChange={handleChange} required />
       </label>
 
 
