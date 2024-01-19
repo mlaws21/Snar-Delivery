@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import "./style/RequestForm.css"
 
 interface Request {
+  id: number;
   name: string;
   building: string;
   room: string;
@@ -17,6 +18,7 @@ interface RequestFormProps {
 
 const RequestForm: React.FC<RequestFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState<Request>({
+    id: 0,
     name: '',
     building: '',
     room: '',

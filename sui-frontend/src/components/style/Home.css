@@ -1,14 +1,24 @@
 /* YourComponent.css */
 
+.board {
+  border-radius: 1vw;
+  border: 1px solid rgb(91, 52, 129);
+  width: 90%;
+  left: 5%;
+  position: relative;
+  top: 1vw;
+}
+
 .vertical-bar {
   display: flex;
   position: relative;
-  width: 90vw;
-  left: 5vw;
+  width: 95%;
+  left: 2.5%;
   /* background-color: #f0f0f0; Background color for the vertical bar */
   padding: 10px; /* Adjust the padding as needed */
   border: 1px solid #ccc; /* Add a border for separation */
   border-radius: 5px; /* Optional: Add border-radius for rounded corners */
+  margin-top: 1vw;
 }
 
 .field {
@@ -25,13 +35,10 @@
 
 }
 
-.test {
-  font-size: 100px;
-}
-
-
 .wrapper {
 
+  text-align: center;
+  width: 15%;
   align-items: center;
   padding-left: 2vw;
 }

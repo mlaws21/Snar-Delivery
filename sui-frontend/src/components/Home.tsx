@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import RequestForm from "./RequestForm";
 import "./style/Home.css"
-import type { SuiMoveObject, } from '@mysten/sui.js/client';
+import type { SuiObjectData } from '@mysten/sui.js/client';
 
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 
@@ -10,7 +10,6 @@ import {
   useSignAndExecuteTransactionBlock,
   useSuiClient,
 } from "@mysten/dapp-kit";
-import { SuiObjectData, } from "@mysten/sui.js/client";
 import { useGetReqBoard } from '../useGetReqBoard';
 
 const PACKAGE = "0xa09f575cb98831bbe860866c80b9f5e24adce17a18a1b17a6d0eee35c6f6d092"
@@ -19,6 +18,7 @@ const BOARD = "0x332ec813b8423ee120c4dcb009e1ec766db7becabcf4049671d2633220a5948
 const CONVERSION = 1000000000
 
 interface Request {
+    id: number;
     name: string;
     building: string;
     room: string; 
@@ -26,10 +26,6 @@ interface Request {
     food: string;
     price: number;
 
-}
-
-interface RequestComponentProps {
-    request: Request;
 }
 
 
@@ -46,10 +42,10 @@ type DataTableItem = {
 }
 
 type DataTableProps = {
-  data: DataTableItem[];
+  myData: DataTableItem[];
 };
 
-const DataTable: React.FC<DataTableProps>= ({ data }) => {
+const DataTable: React.FC<DataTableProps>= ({ myData }) => {
   const account = useCurrentAccount();
   const client = useSuiClient();
   const { mutate: signAndExecuteTransactionBlock } =
@@ -93,39 +89,38 @@ const DataTable: React.FC<DataTableProps>= ({ data }) => {
         },
       },
     );
-
   };
 
 
   return (
-    <div className="vertical-bar">
-    <div className="wrapper"><p className="field">Name: {data.name}</p></div> 
-    <div className="wrapper"><p className="field">Building: {data.building}</p></div>
-    <div className="wrapper"><p className="field">Room: {data.room}</p></div>
-    <div className="wrapper"><p className="field">Swipe: {data.swipe ? 'Yes' : 'No'}</p></div>
-    <div className="wrapper"><p className="field">Food: {data.food}</p></div>
-    <div className="wrapper"><p className="field">Price: {(data.price)}</p></div>
-    <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(data.id)}>Fulfill Request</button></div>
+    <div className='board'>
+      {myData.map((rowData: DataTableItem) => (
+      <div key={rowData.id} className="vertical-bar">
+
+
+          <div className="wrapper"><p className="field">Name: {rowData.name}</p></div>
+          <div className="wrapper"><p className="field">Building: {rowData.building}</p></div>
+          <div className="wrapper"><p className="field">Room: {rowData.room}</p></div>
+          <div className="wrapper"><p className="field">Swipe: {rowData.swipe ? 'Yes' : 'No'}</p></div>
+          <div className="wrapper"><p className="field">Food: {rowData.food}</p></div>
+          <div className="wrapper"><p className="field">Price: {rowData.price}</p></div>
+          <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(rowData.id)}>Fulfill Request</button></div>
+
+      </div>
+    
+    ))}
+
     </div>
 
   );
 };
 
-const RequestComponent: React.FC<RequestComponentProps> = ({ request }) => {
+const RequestComponent = () => {
   
   const client = useSuiClient();
-  const { mutate: signAndExecuteTransactionBlock } =
-  useSignAndExecuteTransactionBlock();
-  // user = getAdress
-  const { handleGetReqBoard } = useGetReqBoard();
-  const { data, isLoading, error, refetch } = handleGetReqBoard();
-
-
-
-
-
 
   const [tableData, setTableData] = useState<{
+    id: number;
     name: string;
     building: string;
     room: string;
@@ -147,19 +142,12 @@ const RequestComponent: React.FC<RequestComponentProps> = ({ request }) => {
             id: poolId,
             options: { showContent: true },
           });
+          // const poolFields = (dynFieldForPool.data?.content as SuiMoveObject)?.fields.value.fields;
+          const poolFields = getTableDate(dynFieldForPool.data!)
+          
 
-          const poolFields = (dynFieldForPool.data.content as SuiMoveObject).fields.value.fields;
-
-          return {
-            // dynamicFieldId: dynFieldForPool.data.objectId,
-            id: poolFields["key"],
-            name: poolFields["name"],
-            building: poolFields["building"],
-            room: poolFields["room"],
-            swipe: poolFields["swipe"],
-            food: poolFields["food"],
-            price: poolFields["price"],
-          };
+          // return m
+          return poolFields;
         } catch (error) {
           console.error('Error fetching dynamic field:', error);
           throw error;
@@ -192,29 +180,17 @@ const RequestComponent: React.FC<RequestComponentProps> = ({ request }) => {
     return (
         <div>
 
-        {tableData.length > 0 ? tableData.map((rowData, index) => (
-          <DataTable key={index} data={rowData} />
-        )) : <p>No Current Requests</p>
-        }
+        {/* {tableData.length > 0 ? tableData.map((rowData, index) => ( */}
+          <DataTable myData={tableData} />
+        {/* )) : <p>No Current Requests</p> */}
+
         </div>
     )
 }
 
-interface MyComponentProps {
-  // Define your component props here
-}
 
-const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ }) => {
+const Form = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const sampleRequest: Request = {
-    name: 'John',
-    building: 'Main Building',
-    room: '101',
-    swipe: true,
-    food: 'Pizza',
-    price: 10,
-  };
 
   const toggleOpenClose = () => {
     setIsOpen(!isOpen);
@@ -225,7 +201,7 @@ const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ })
   useSignAndExecuteTransactionBlock();
 
   const { handleGetReqBoard } = useGetReqBoard();
-  const { data, isLoading, error, refetch } = handleGetReqBoard();
+  const { refetch } = handleGetReqBoard();
 
 
   const handleRequestSubmit = (request: Request) => {
@@ -274,7 +250,6 @@ const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ })
   return (
     <div id="main">
       <button id="toggle" onClick={toggleOpenClose}>
-        {/* {isOpen ? 'Close' : 'Open'} Form */}
         {isOpen ? "x" : '+'}
 
       </button>
@@ -285,7 +260,7 @@ const Form: React.FC<MyComponentProps> = ({ /* Destructure props if needed */ })
           <RequestForm onSubmit={handleRequestSubmit} />
 
         </div>
-      ) : <RequestComponent request={sampleRequest}/>}
+      ) : <RequestComponent/>}
     </div>
   );
 };
@@ -305,13 +280,19 @@ const Home = () => {
     )
 }
 
-function getTable(data: SuiObjectData) {
+function getTableDate(data: SuiObjectData) {
   if (data.content?.dataType !== "moveObject") {
     throw new Error("Content not found");
   }
-
-  const { request_created } = data.content.fields as { request_created: any };
-  return request_created;
+  const metadata = (data.content.fields as any).value.fields as { key: number , name: string, building: string, room: string, swipe: string, food: string, price: string};
+  
+  return { id: metadata.key,
+          name: metadata.name,
+          building: metadata.building,
+          room: metadata.room,
+          swipe: metadata.swipe,
+          food: metadata.food,
+          price: metadata.price,};
 }
 
 export default Home
