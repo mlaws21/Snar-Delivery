@@ -2,17 +2,18 @@
 form {
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 18%;
     margin: auto;
   }
   
   label {
+    font-size: 1vw;
     margin-bottom: 10px;
   }
   
   input, textarea {
-    margin-top: 5px;
-    padding: 8px;
+    margin-top: 0.8vw;
+    padding: 0.3vw;
     width: 100%;
     box-sizing: border-box;
   }
@@ -34,5 +35,8 @@ form {
   accent-color: rgb(91, 52, 129);;
 }
 
+.submit {
+  font-size: 1.2vw;
+}
 
 

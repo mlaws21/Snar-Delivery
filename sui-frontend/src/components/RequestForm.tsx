@@ -76,7 +76,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ onSubmit }) => {
 
 
 
-      <button type="submit">Submit Request</button>
+      <button type="submit" className="submit">Submit Request</button>
     </form>
   );
 };
