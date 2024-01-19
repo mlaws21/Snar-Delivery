@@ -56,6 +56,8 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
 
 
   const fulfillRequest = (requestNum: number) => {
+    
+    
     // Do something with the submitted request
     let txb = new TransactionBlock();
 
@@ -92,11 +94,80 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
     );
   };
 
+
+    // State to manage the selected value
+  const [selectedValue, setSelectedValue] = useState('');
+  const [sortedData, setSortedData] = useState<DataTableItem[]>(myData);
+  // let sortedData = myData.sort((a, b) => (b.id) - (a.id));
+  useEffect(() => {
+    switch (selectedValue) {
+      case 'id':
+        setSortedData([...myData].sort((a, b) => b.id - a.id));
+        break;
+      case 'price':
+        setSortedData([...myData].sort((a, b) => parseInt(a.price) - parseInt(b.price)));
+        break;
+      case 'name':
+        setSortedData([...myData].sort((a, b) => b.name.localeCompare(a.name)));
+        break;
+      case 'dropoff':
+        setSortedData([...myData].sort((a, b) => a.room.localeCompare(b.room)));
+
+        break;
+      case 'food':
+        setSortedData([...myData].sort((a, b) => a.food.localeCompare(b.food)));
+        break;
+      default:
+        setSortedData([...myData].sort((a, b) => b.id - a.id));
+        break;
+    };
+  }, []); 
+
+  useEffect(() => {
+    switch (selectedValue) {
+      case 'id':
+        setSortedData([...myData].sort((a, b) => b.id - a.id));
+        break;
+      case 'price':
+        setSortedData([...myData].sort((a, b) => parseInt(b.price) - parseInt(a.price)));
+        break;
+      case 'name':
+        setSortedData([...myData].sort((a, b) => a.name.localeCompare(b.name)));
+        break;
+      case 'dropoff':
+        setSortedData([...myData].sort((a, b) => a.room.localeCompare(b.room)));
+        break;
+      case 'food':
+        setSortedData([...myData].sort((a, b) => a.food.localeCompare(b.food)));
+        break;
+      default:
+        setSortedData([...myData].sort((a, b) => b.id - a.id));
+        break;
+    }
+  }, [selectedValue, myData]);
+  // Handler function for changing the selected value
+  const handleDropdownChange = (event:any) => {
+    setSelectedValue(event.target.value);
+
+  };
   
-  const sortedData = myData.sort((a, b) => (b.id) - (a.id))
+  // const sortedData = myData.sort((a, b) => (b.id) - (a.id))
   return (
     <div>
       {myData.length > 0 ? (
+      <div>
+        <div className="filter">
+          <p className="sortLab">Sort by:</p>
+          <select id="myDropdown" value={selectedValue} onChange={handleDropdownChange}>
+            <option value="id">Time</option>
+            <option value="price">Price</option>
+            <option value="name">Name</option>
+            <option value="dropoff">Drop-off</option>
+            <option value="food">Food</option>
+
+          
+          </select>
+        </div>
       <div className='board'>
        
 
@@ -114,8 +185,8 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
             <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(rowData.id)}>Fulfill Request</button></div>
           {/* </div> */}
         </div>
-      
       ))}
+      </div>
 
     </div>) : (<div>
         <p className='noRequests'>No Pending Requests...</p>
@@ -175,14 +246,19 @@ const RequestComponent = () => {
     }
   };
   
+  const fetchData = async () => {
+    await useGetTable();
+  };
+
   useEffect(() => {
     // Initial data fetch
-    useGetTable();
+    // useGetTable();
+    fetchData();
 
     // Set up interval to refresh every 5 seconds
     const intervalId = setInterval(() => {
-      useGetTable();
-    }, 1000);
+      fetchData();
+    }, 500);
 
     // Clear interval on component unmount
     return () => clearInterval(intervalId);
@@ -223,7 +299,7 @@ const Form = () => {
 
     const now = new Date();
     const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
-    const minutes = now.getMinutes().toString()
+    const minutes = now.getMinutes().toString().padStart(2, '0')
     const ampm = now.getHours() >= 12 ? 'pm' : 'am';
 
     // Format the time as HH:MM:SS
@@ -269,10 +345,11 @@ const Form = () => {
       },
     );
     toggleOpenClose();
+
   };
 
   return (
-    <div id="main">
+    <div className="main">
       <button id="toggle" onClick={toggleOpenClose}>
         {isOpen ? "x" : '+'}
 
@@ -319,4 +396,4 @@ function getTableDate(data: SuiObjectData) {
           price: metadata.price,};
 }
 
-export default Home
+export default Home;

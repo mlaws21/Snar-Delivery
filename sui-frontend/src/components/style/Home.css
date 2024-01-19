@@ -87,16 +87,16 @@ button:hover {
   align-items: center;
   justify-content: center;
   text-align: center;
-  height: 2vw;
-  width: 2vw;
+  height: 3.2vw;
+  width: 3.2vw;
   line-height: 1;
-
   font-size: 1.8vw;
   position: absolute;
   right: 1.25%;
+  top: -1vw;
 }
 
-#main{
+.main{
   position: relative;
   top:1vw;
 }
@@ -120,3 +120,29 @@ button:hover {
 .reqHeight {
   width: 100%;
 } */
+
+#myDropdown {
+  text-align: center;
+  background-color: rgb(91, 52, 129);
+  color: white;
+  position: relative;
+  /* top: 0.5vw; */
+  left: 80vw;
+  padding: 0.8vw;
+  font-size: 1.5vw;
+  border: 1px solid rgb(91, 52, 129);
+
+}
+
+.filter {
+  /* justify-content: center;  */
+  display: flex;
+  /* justify-content: space-between; */
+}
+
+.sortLab {
+  font-size: 1.5vw;
+  position: relative;
+  left: 79vw;
+  padding-top: 0.5vw;
+}
