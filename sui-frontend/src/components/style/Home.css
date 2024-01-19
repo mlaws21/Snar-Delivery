@@ -22,7 +22,7 @@ div {
   width: 95%;
   left: 2.5%;
   /* background-color: #f0f0f0; Background color for the vertical bar */
-  padding: 10px; /* Adjust the padding as needed */
+  padding: 0.5vw; /* Adjust the padding as needed */
   border: 1px solid #ccc; /* Add a border for separation */
   border-radius: 5px; /* Optional: Add border-radius for rounded corners */
   margin-top: 1vw;
@@ -32,13 +32,13 @@ div {
 
 .field {
   color: rgb(91, 52, 129);
-  font-size: 1.3vw;
+  font-size: 1.1vw;
   margin-bottom: 0.5vw; /* Adjust the margin between fields */
   margin-top: 0.5vw; /* Adjust the margin between fields */
 
-  padding: 8px; /* Adjust the padding for each field */
+  padding: 0.5vw; /* Adjust the padding for each field */
   border: 1px solid #ddd; /* Add a border for each field */
-  border-radius: 3px; /* Optional: Add border-radius for rounded corners */
+  border-radius: 0.5vw; /* Optional: Add border-radius for rounded corners */
   /* background-color: #fff; Background color for each field */
   border: 1px solid rgb(91, 52, 129);
 
@@ -50,11 +50,18 @@ div {
 }
 
 .wrapper {
+  /* height: inherit; */
 
   text-align: center;
-  width: 15%;
+  width: 14%;
   align-items: center;
   padding-left: 2vw;
+}
+
+#food {
+  color: red;
+  font-size: 0.1vw;
+  width: 20%;
 }
 
 #fulfill {
@@ -98,3 +105,18 @@ button:hover {
 .radioDiv {
   display: flex;
 }
+
+.sui {
+  
+  font-weight: lighter;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgba(156, 156, 156, 0.7);
+  font-size: 1vw;
+}
+
+
+
+/* 
+.reqHeight {
+  width: 100%;
+} */

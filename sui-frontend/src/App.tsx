@@ -13,7 +13,7 @@ function App() {
         py="2"
         justify="between"
         style={{
-          borderBottom: "1px solid var(--gray-a2)",
+          borderBottom: "1px solid rgba(106, 106, 106, 0.2)",
         }}
       >
         <Box>

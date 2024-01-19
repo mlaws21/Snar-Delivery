@@ -92,6 +92,7 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
     );
   };
 
+  
 
   return (
     <div>
@@ -100,15 +101,15 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
         {myData.map((rowData: DataTableItem) => (
         <div key={rowData.id} className="vertical-bar">
 
-
+          {/* <div className="reqHeight"> */}
             <div className="wrapper"><p className="field">Name: {rowData.name}</p></div>
             <div className="wrapper"><p className="field">Building: {rowData.building}</p></div>
             <div className="wrapper"><p className="field">Room: {rowData.room}</p></div>
             <div className="wrapper"><p className="field">Paid: {rowData.swipe ? 'Yes' : 'No'}</p></div>
-            <div className="wrapper"><p className="field">Food: {rowData.food}</p></div>
-            <div className="wrapper"><p className="field">Price: {rowData.price}</p></div>
+            <div id="food" className="wrapper"><p className="field">Food: {rowData.food}</p></div>
+            <div className="wrapper"><p className="field">Price: {rowData.price} <span className="sui">SUI</span></p></div>
             <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(rowData.id)}>Fulfill Request</button></div>
-
+          {/* </div> */}
         </div>
       
       ))}
