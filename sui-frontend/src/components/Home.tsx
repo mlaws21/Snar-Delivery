@@ -93,19 +93,22 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
   };
 
   
-
+  const sortedData = myData.sort((a, b) => (b.id) - (a.id))
   return (
     <div>
       {myData.length > 0 ? (
       <div className='board'>
-        {myData.map((rowData: DataTableItem) => (
+       
+
+        {sortedData.map((rowData: DataTableItem) => (
         <div key={rowData.id} className="vertical-bar">
 
           {/* <div className="reqHeight"> */}
             <div className="wrapper"><p className="field">Name: {rowData.name}</p></div>
-            <div className="wrapper"><p className="field">Building: {rowData.building}</p></div>
-            <div className="wrapper"><p className="field">Room: {rowData.room}</p></div>
-            <div className="wrapper"><p className="field">Paid: {rowData.swipe ? 'Yes' : 'No'}</p></div>
+            {/* <div className="wrapper"><p className="field">Building: {rowData.building}</p></div> */}
+            <div className="wrapper"><p className="field">Time: {rowData.building}</p></div>
+            <div className="wrapper"><p className="field">Drop-off: {rowData.room}</p></div>
+            <div className="wrapper"><p className="field">Prepaid: {rowData.swipe}</p></div>
             <div id="food" className="wrapper"><p className="field">Food: {rowData.food}</p></div>
             <div className="wrapper"><p className="field">Price: {rowData.price} <span className="sui">SUI</span></p></div>
             <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(rowData.id)}>Fulfill Request</button></div>
@@ -217,8 +220,16 @@ const Form = () => {
 
   const handleRequestSubmit = (request: Request) => {
     // Do something with the submitted request
-    let txb = new TransactionBlock();
 
+    const now = new Date();
+    const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
+    const minutes = now.getMinutes().toString()
+    const ampm = now.getHours() >= 12 ? 'pm' : 'am';
+
+    // Format the time as HH:MM:SS
+    const formattedTime = `${hours}:${minutes}${ampm}`;
+    let txb = new TransactionBlock();
+    console.log(formattedTime);
 
 
     const [coin] = txb.splitCoins(txb.gas, [request.price * CONVERSION]);
@@ -230,7 +241,8 @@ const Form = () => {
           BOARD_OBJ
         ),
         txb.pure(request.name),
-        txb.pure(request.building),
+        // txb.pure(request.building),
+        txb.pure(formattedTime),
         txb.pure(request.room),
         txb.pure((request.swipe) ? "Yes" : "No"),
         txb.pure(request.food),
