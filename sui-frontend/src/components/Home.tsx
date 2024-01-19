@@ -30,7 +30,6 @@ interface Request {
 
 
 type DataTableItem = {
-  // data: {
     id: number;
     name: string;
     building: string;
@@ -38,14 +37,23 @@ type DataTableItem = {
     swipe: string;
     food: string;
     price: string;
-  // }[];
+
 }
 
 type DataTableProps = {
   myData: DataTableItem[];
 };
 
+
+// SECTION Data Table
+// This is table that is displayed in the Request Board
+// Infrastructure for the Request Board
+// Sets up the fulfill request transaction
+
 const DataTable: React.FC<DataTableProps>= ({ myData }) => {
+
+  // NOTE Transaction Block - Fulfill
+
   const account = useCurrentAccount();
   const client = useSuiClient();
   const { mutate: signAndExecuteTransactionBlock } =
@@ -57,23 +65,20 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
 
   const fulfillRequest = (requestNum: number) => {
     
-    
-    // Do something with the submitted request
-    let txb = new TransactionBlock();
+  let txb = new TransactionBlock();
 
-    const [payment] = txb.moveCall({
-      target: `${PACKAGE}::request::fulfill_request`,
-      arguments: [
-        txb.object(
-          BOARD_OBJ
-        ),
-        txb.pure(requestNum),
-      ],
-    })
+  const [payment] = txb.moveCall({
+    target: `${PACKAGE}::request::fulfill_request`,
+    arguments: [
+      txb.object(
+        BOARD_OBJ
+      ),
+      txb.pure(requestNum),
+    ],
+  })
 
     
     txb.transferObjects([payment], account?.address || "")
-    // txb.mergeCoins()
 
     signAndExecuteTransactionBlock(
       {
@@ -87,18 +92,19 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
           });
         },
         onError: (err) => {
-          console.log("something went wrong");
+          console.log("something went wrong in fulfil");
           console.log(err);
         },
       },
     );
   };
 
+  // NOTE Sorting
 
     // State to manage the selected value
   const [selectedValue, setSelectedValue] = useState('');
   const [sortedData, setSortedData] = useState<DataTableItem[]>(myData);
-  // let sortedData = myData.sort((a, b) => (b.id) - (a.id));
+
   useEffect(() => {
     switch (selectedValue) {
       case 'id':
@@ -151,7 +157,8 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
 
   };
   
-  // const sortedData = myData.sort((a, b) => (b.id) - (a.id))
+  //NOTE HTML
+
   return (
     <div>
       {myData.length > 0 ? (
@@ -174,16 +181,13 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
         {sortedData.map((rowData: DataTableItem) => (
         <div key={rowData.id} className="vertical-bar">
 
-          {/* <div className="reqHeight"> */}
             <div className="wrapper"><p className="field">Name: {rowData.name}</p></div>
-            {/* <div className="wrapper"><p className="field">Building: {rowData.building}</p></div> */}
             <div className="wrapper"><p className="field">Time: {rowData.building}</p></div>
             <div className="wrapper"><p className="field">Drop-off: {rowData.room}</p></div>
             <div className="wrapper"><p className="field">Prepaid: {rowData.swipe}</p></div>
             <div id="food" className="wrapper"><p className="field">Food: {rowData.food}</p></div>
             <div className="wrapper"><p className="field">Price: {rowData.price} <span className="sui">SUI</span></p></div>
             <div className="wrapper"><button id="fulfill" className="field" onClick={() => fulfillRequest(rowData.id)}>Fulfill Request</button></div>
-          {/* </div> */}
         </div>
       ))}
       </div>
@@ -200,7 +204,14 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
   );
 };
 
-const RequestComponent = () => {
+//!SECTION
+
+
+// SECTION Request Board
+
+// sets up the request board 
+// fetches the data off the blockchain to pass to the data table
+const RequestBoard = () => {
   
   const client = useSuiClient();
 
@@ -214,7 +225,7 @@ const RequestComponent = () => {
     price: string;
   }[]>([]);
 
-
+  // NOTE fetches table
   const useGetTable = async () => {
     try {
       const dynamicFieldPage = await client.getDynamicFields({ parentId: BOARD });
@@ -251,35 +262,34 @@ const RequestComponent = () => {
   };
 
   useEffect(() => {
-    // Initial data fetch
-    // useGetTable();
     fetchData();
 
-    // Set up interval to refresh every 5 seconds
+    // Set up interval to refresh every 0.5 seconds
     const intervalId = setInterval(() => {
       fetchData();
     }, 500);
 
-    // Clear interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
 
   
 
-
+    // NOTE HTML
     return (
-        <div>
+      <div>
 
-        {/* {tableData.length > 0 ? tableData.map((rowData, index) => ( */}
-          <DataTable myData={tableData} />
-        {/* )) : <p>No Current Requests</p> */}
+        <DataTable myData={tableData} />
 
-        </div>
+      </div>
     )
 }
 
+//!SECTION
 
-const Form = () => {
+// SECTION Home
+// Driver code
+// also sets up the infrastructure for submitting requests
+const Home = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleOpenClose = () => {
@@ -295,18 +305,18 @@ const Form = () => {
 
 
   const handleRequestSubmit = (request: Request) => {
-    // Do something with the submitted request
 
     const now = new Date();
-    const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
+    const hours = now.getHours() % 12 || 12;
     const minutes = now.getMinutes().toString().padStart(2, '0')
     const ampm = now.getHours() >= 12 ? 'pm' : 'am';
 
-    // Format the time as HH:MM:SS
     const formattedTime = `${hours}:${minutes}${ampm}`;
+
+    // NOTE Transaction Block - Request
+
     let txb = new TransactionBlock();
     console.log(formattedTime);
-
 
     const [coin] = txb.splitCoins(txb.gas, [request.price * CONVERSION]);
 
@@ -317,7 +327,6 @@ const Form = () => {
           BOARD_OBJ
         ),
         txb.pure(request.name),
-        // txb.pure(request.building),
         txb.pure(formattedTime),
         txb.pure(request.room),
         txb.pure((request.swipe) ? "Yes" : "No"),
@@ -339,7 +348,7 @@ const Form = () => {
           });
         },
         onError: (err) => {
-          console.log("something went wrong");
+          console.log("something went wrong in request");
           console.log(err);
         },
       },
@@ -357,30 +366,19 @@ const Form = () => {
       
       {isOpen ? (
         <div>
-          {/* Content to display when the component is open */}
           <RequestForm onSubmit={handleRequestSubmit} />
 
         </div>
-      ) : <RequestComponent/>}
+      ) : <RequestBoard/>}
     </div>
   );
 };
 
+//!SECTION
 
-
-const Home = () => {
-
-
-
-    return (
-        <div>
-            {/* <RequestComponent request={sampleRequest} /> */}
-            <Form />
-            {/* <RequestForm onSubmit={handleRequestSubmit} /> */}
-        </div>
-    )
-}
-
+// SECTION Table Deconstructor / Reconstructor
+// This is a helper for the table fetching
+// deconstruct and reconstruct the table object from the blockchain
 function getTableDate(data: SuiObjectData) {
   if (data.content?.dataType !== "moveObject") {
     throw new Error("Content not found");
@@ -395,5 +393,6 @@ function getTableDate(data: SuiObjectData) {
           food: metadata.food,
           price: metadata.price,};
 }
+//!SECTION
 
 export default Home;
