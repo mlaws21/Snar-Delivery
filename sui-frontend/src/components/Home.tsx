@@ -62,7 +62,7 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
   const { handleGetReqBoard } = useGetReqBoard();
   const { refetch } = handleGetReqBoard();
 
-
+  //  NOTE Fulfill Request Function
   const fulfillRequest = (requestNum: number) => {
     
   let txb = new TransactionBlock();
@@ -101,7 +101,6 @@ const DataTable: React.FC<DataTableProps>= ({ myData }) => {
 
   // NOTE Sorting
 
-    // State to manage the selected value
   const [selectedValue, setSelectedValue] = useState('');
   const [sortedData, setSortedData] = useState<DataTableItem[]>(myData);
 
@@ -303,7 +302,7 @@ const Home = () => {
   const { handleGetReqBoard } = useGetReqBoard();
   const { refetch } = handleGetReqBoard();
 
-
+  // NOTE Submit Request Function
   const handleRequestSubmit = (request: Request) => {
 
     const now = new Date();
